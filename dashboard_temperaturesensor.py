@@ -15,7 +15,7 @@ def refresh_btn_cmd(temp_widget, did):
     # TODO: START
     # device_info_response = requests.get(f'http://localhost:8000/device/{did}')
     # send request to cloud service to obtain current temperature
-    current_temp_response = requests.get(f'http://localhost:8000/device/{did}/current')
+    current_temp_response = requests.get(f'http://localhost:8000/smarthouse/sensor/{did}/current')
     current_temp = current_temp_response.json().get('value', None)
 
     # replace statement below with measurement from response
