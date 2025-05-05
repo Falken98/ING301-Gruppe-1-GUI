@@ -13,11 +13,24 @@ def lightbulb_cmd(state, did):
 
     logging.info(f"Dashboard: {new_state}")
 
-    # TODO: START
     # send HTTP request with new actuator state to cloud service
+    url = f'http://127.0.0.1:8000/smarthouse/actuator/{did}/'
+    headers = {'accept': 'application/json'}
+    if new_state == 'On':
+        data = {'state': True}
+    else:
+        data = {'state': False}
 
-
-    # TODO: END
+    try:
+        response = requests.put(url, headers=headers, params=data)
+        # logging.info(f"Response: {response.status_code}")
+        if response.status_code == 200:
+            posts = response.json()
+            logging.info(f"Actuator {posts['id']} state: {posts['is_active']}")
+        else:
+            logging.error(f'Error:{response.status_code}')
+    except requests.exceptions.RequestException as e:
+        logging.error(f'Error:{e}')
 
 
 def init_lightbulb(container, did):
