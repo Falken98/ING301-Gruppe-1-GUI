@@ -27,23 +27,36 @@ class Actuator:
 
         logging.info(f"Actuator Client {self.did} starting")
 
-        # TODO: START
         # send request to cloud service with regular intervals and
         # set state of actuator according to the received response
 
-        logging.info(f"Client {self.did} finishing")
+        self.url = f'http://127.0.0.1:8000/smarthouse/actuator/{self.did}/current/'
+        self.headers = {'accept': 'application/json'}
 
-        # TODO: END
+        while True:
+            try:
+                response = requests.put(self.url, headers=self.headers)
+                if response.status_code == 200:
+                    posts = response.json()
+                    logging.info(f"Actuator {posts['id']} state: {posts['state']}")
+                    self.state.state = response.json()['state']
+                else:
+                    logging.error(f'Error: {response.status_code}')
+            except requests.exceptions.RequestException as e:
+                logging.error(f'Error: {e}')
+        
+            time.sleep(common.LIGHTBULB_CLIENT_SLEEP_TIME)
+
+        logging.info(f"Client {self.did} finishing")
 
     def run(self):
 
-        pass
-        # TODO: START
-
         # start thread simulating physical light bulb
+        actuator_thread = threading.Thread(target=self.simulator, daemon=True)
+        actuator_thread.start()
 
         # start thread receiving state from the cloud
-
-        # TODO: END
+        actuator_client_thread = threading.Thread(target=self.client, daemon=True)
+        actuator_client_thread.start()
 
 
