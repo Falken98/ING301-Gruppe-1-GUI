@@ -13,10 +13,13 @@ def refresh_btn_cmd(temp_widget, did):
     logging.info("Temperature refresh")
 
     # TODO: START
+    # device_info_response = requests.get(f'http://localhost:8000/device/{did}')
     # send request to cloud service to obtain current temperature
+    current_temp_response = requests.get(f'http://localhost:8000/device/{did}/current')
+    current_temp = current_temp_response.json().get('value', None)
 
     # replace statement below with measurement from response
-    sensor_measurement = SensorMeasurement(init_value="-273.15")
+    sensor_measurement = SensorMeasurement(init_value = str(current_temp))
 
     # TODO: END
 
