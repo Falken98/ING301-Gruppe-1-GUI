@@ -33,15 +33,14 @@ class Sensor:
         
         # send temperature to the cloud service with regular intervals
         while True:
-
-            time.sleep(3) # Alle gode ting er tre
-
             # send request to cloud service to update current temperature
             response = requests.post(f'http://localhost:8000/device/{self.did}/current', json={'state': self.measurement.value})
             if response.status_code == 200:
                 logging.info(f"Sensor Client {self.did} sent temperature: {self.measurement.value}")
             else:
                 logging.error(f"Sensor Client {self.did} failed to send temperature: {response.status_code}")
+
+            time.sleep(common.TEMPERATURE_SENSOR_CLIENT_SLEEP_TIME)
 
         logging.info(f"Client {self.did} finishing")
 
